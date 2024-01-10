@@ -16,11 +16,11 @@ export class Struct<
 
   readPacked(dt: DataView, options: Options = { byteOffset: 0 }): V {
     if (this.#record.length === 0) return {} as V;
-
     const result: Record<string, unknown> = {};
 
-    for (let i = 0; i < this.#record.length; i++) {
-      const { 0: key, 1: type } = this.#record[i];
+    const record = this.#record;
+    for (let i = 0; i < record.length; i++) {
+      const { 0: key, 1: type } = record[i];
       result[key] = type.readPacked(dt, options);
     }
 
@@ -29,11 +29,11 @@ export class Struct<
 
   read(dt: DataView, options: Options = { byteOffset: 0 }): V {
     if (this.#record.length === 0) return {} as V;
-
     const result: Record<string, unknown> = {};
 
-    for (let i = 0; i < this.#record.length; i++) {
-      const { 0: key, 1: type } = this.#record[i];
+    const record = this.#record;
+    for (let i = 0; i < record.length; i++) {
+      const { 0: key, 1: type } = record[i];
       result[key] = type.read(dt, options);
     }
 
@@ -47,8 +47,9 @@ export class Struct<
   ): void {
     if (this.#record.length === 0) return;
 
-    for (let i = 0; i < this.#record.length; i++) {
-      const { 0: key, 1: type } = this.#record[i];
+    const record = this.#record;
+    for (let i = 0; i < record.length; i++) {
+      const { 0: key, 1: type } = record[i];
       type.writePacked(value[key], dt, options);
     }
   }
@@ -56,8 +57,9 @@ export class Struct<
   write(value: V, dt: DataView, options: Options = { byteOffset: 0 }): void {
     if (this.#record.length === 0) return;
 
-    for (let i = 0; i < this.#record.length; i++) {
-      const { 0: key, 1: type } = this.#record[i];
+    const record = this.#record;
+    for (let i = 0; i < record.length; i++) {
+      const { 0: key, 1: type } = record[i];
       type.write(value[key], dt, options);
     }
   }
