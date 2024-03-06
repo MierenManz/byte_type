@@ -10,6 +10,32 @@ export class PrefixedString extends UnsizedType<string> {
     this.#prefixCodec = prefixCodec;
   }
 
+  readPacked(dt: DataView, options: Options = { byteOffset: 0 }): string {
+    const length = this.#prefixCodec.readPacked(dt, options);
+    const view = new Uint8Array(
+      dt.buffer,
+      dt.byteOffset + options.byteOffset,
+      length,
+    );
+
+    super.incrementOffset(options, length);
+    return TEXT_DECODER.decode(view);
+  }
+
+  read(dt: DataView, options: Options = { byteOffset: 0 }): string {
+    const length = this.#prefixCodec.read(dt, options);
+    super.alignOffset(options);
+
+    const view = new Uint8Array(
+      dt.buffer,
+      dt.byteOffset + options.byteOffset,
+      length,
+    );
+
+    super.incrementOffset(options, length);
+    return TEXT_DECODER.decode(view);
+  }
+
   writePacked(
     value: string,
     dt: DataView,
@@ -43,31 +69,5 @@ export class PrefixedString extends UnsizedType<string> {
 
     TEXT_ENCODER.encodeInto(value, view);
     super.incrementOffset(options, value.length);
-  }
-
-  readPacked(dt: DataView, options: Options = { byteOffset: 0 }): string {
-    const length = this.#prefixCodec.readPacked(dt, options);
-    const view = new Uint8Array(
-      dt.buffer,
-      dt.byteOffset + options.byteOffset,
-      length,
-    );
-
-    super.incrementOffset(options, length);
-    return TEXT_DECODER.decode(view);
-  }
-
-  read(dt: DataView, options: Options = { byteOffset: 0 }): string {
-    const length = this.#prefixCodec.read(dt, options);
-    super.alignOffset(options);
-
-    const view = new Uint8Array(
-      dt.buffer,
-      dt.byteOffset + options.byteOffset,
-      length,
-    );
-
-    super.incrementOffset(options, length);
-    return TEXT_DECODER.decode(view);
   }
 }

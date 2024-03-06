@@ -7,7 +7,6 @@ export class Bool extends SizedType<boolean> {
 
   readPacked(dt: DataView, options: Options = { byteOffset: 0 }): boolean {
     super.rangeCheck(dt.byteLength, options.byteOffset);
-
     const value = Boolean(dt.getInt8(options.byteOffset));
     super.incrementOffset(options);
     return value;
@@ -19,7 +18,6 @@ export class Bool extends SizedType<boolean> {
     options: Options = { byteOffset: 0 },
   ): void {
     super.rangeCheck(dt.byteLength, options.byteOffset);
-
     dt.setInt8(options.byteOffset, Number(value));
     super.incrementOffset(options);
   }
