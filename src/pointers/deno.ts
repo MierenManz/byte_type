@@ -50,12 +50,11 @@ export class DenoRef<T> extends SizedType<T> {
     options: Options = { byteOffset: 0 },
   ): void {
     const writeDT = this.#innerDT;
+    this.#inner.writePacked(value, writeDT);
+
     const writePtr = Deno.UnsafePointer.of(
       this.#innerDT.buffer as ArrayBuffer,
     );
-
-    this.#inner.writePacked(value, writeDT);
-
     denoPointer.writePacked(writePtr, dt, options);
 
     // Buff is now transfered so we need to create a new one
